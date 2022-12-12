@@ -14,23 +14,39 @@ import {
   ImageBackground,
 } from "react-native";
 
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+}
 
 export default function RegistrationScreen({navigation}) {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
 
-  const nameHandler = (text) => setName(text);
-  const passwordHandler = (text) => setPassword(text);
+  console.log(Platform.OS)
 
-  const onLogin = () => {
-    Alert.alert("Credentials", `${name} + ${password}`);
-  };
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState)
+
+  // const [name, setName] = useState("");
+  // const [password, setPassword] = useState("");
+
+  // // const nameHandler = (text) => setName(text);
+  // const passwordHandler = (text) => setPassword(text);
+
+  // const onLogin = () => {
+  //   Alert.alert("Credentials", `${name} + ${password}`);
+  // };
 
   const loadScene =() =>{
     navigation.navigate("Login")
   }
 
-  console.log(Platform.OS)
+  const keyboardHide = ()=>{
+    setIsShowKeyboard(false)
+    Keyboard.dismiss()
+    console.log(state)
+    setState(initialState)
+  }
 
   return (
     <View style={styles.main_container}>
@@ -42,28 +58,31 @@ export default function RegistrationScreen({navigation}) {
 
         </View> */}
 
-        {/* <KeyboardAvoidingView
+        <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
-        > */}
+        >
           <Text component="h1" style={styles.h1} >Registration</Text>
           <TextInput
-            value={name}
-            onChangeText={nameHandler}
+            value={state.login}
+            // onChangeText={nameHandler}
             placeholder="Login"
             style={styles.input}
+            onChangeText = {(value)=> setState((prevState) =>({...prevState, login: value}) )}
           />
           <TextInput
-            value={password}
-            onChangeText={passwordHandler}
+            value={state.email}
+            // onChangeText={passwordHandler}
             placeholder="Email"
             style={styles.input}
+            onChangeText = {(value)=> setState((prevState) =>({...prevState, email: value}) )}
           />
           <TextInput
-            value={password}
-            onChangeText={passwordHandler}
+            value={state.password}
+            // onChangeText={passwordHandler}
             placeholder="Password"
             secureTextEntry={true}
             style={styles.input}
+            onChangeText = {(value)=> setState((prevState) =>({...prevState, password: value}) )}
           />
 
           <TouchableOpacity style = {styles.registaration_btn}>
@@ -74,7 +93,7 @@ export default function RegistrationScreen({navigation}) {
               <Text style = {styles.log_in_page_link__text}>Already have an account? Log In</Text>
             </TouchableOpacity> 
           
-        {/* </KeyboardAvoidingView> */}
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
     </ImageBackground>
@@ -102,7 +121,7 @@ const styles = StyleSheet.create({
     paddingTop:92,
 
     width: 360,
-    height: 520,
+    // height: 520,
     
     alignItems: "center",
     justifyContent: "flex-end",
