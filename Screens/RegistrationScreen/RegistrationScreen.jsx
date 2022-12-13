@@ -14,6 +14,16 @@ import {
 
 import * as Font from 'expo-font';
 
+import { AppLoading } from 'expo';
+
+const loadFonts = async () => {
+  await Font.loadAsync({
+    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
+  })
+}
+
 const initialState = {
   login: "",
   email: "",
@@ -26,6 +36,7 @@ export default function RegistrationScreen({navigation}) {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
+  const [isReady, setIsReady] = useState(false)
 
   const loadScene = () =>{
     navigation.navigate("Login")
@@ -36,6 +47,15 @@ export default function RegistrationScreen({navigation}) {
     Keyboard.dismiss()
     console.log(state)
     setState(initialState)
+  }
+
+  if(!isReady){
+    return (
+    <AppLoading 
+      startAsync={loadFonts} 
+      onFinish={() => setIsReady(true)}
+      onError ={console.warn}
+      />)
   }
 
   return (
@@ -152,7 +172,7 @@ const styles = StyleSheet.create({
   h1: {    
     marginBottom: 33,
 
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     fontWeight: "500",
     lineHeight: 35,
@@ -175,7 +195,7 @@ const styles = StyleSheet.create({
   },
 
   registaration_btn__text:{
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto-Regular',
     fontStyle: "normal",
     fontWeight: "400",
     fontSize: 16,
@@ -192,7 +212,7 @@ const styles = StyleSheet.create({
   },
 
   log_in_page_link__text:{
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     fontWeight: "400",
     lineHeight: 19,

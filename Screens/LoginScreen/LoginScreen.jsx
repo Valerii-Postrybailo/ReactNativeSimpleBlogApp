@@ -12,6 +12,19 @@ import {
   ImageBackground,
 } from "react-native";
 
+import * as Font from 'expo-font';
+
+
+import { AppLoading } from 'expo';
+
+const loadFonts = async () => {
+  await Font.loadAsync({
+    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
+  })
+}
+
 const initialState = {
   email: "",
   password: "",
@@ -23,6 +36,8 @@ export default function LoginScreen({ navigation }) {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
+  const [isReady, setIsReady] = useState(false)
+
 
   const keyboardHide = () =>{
     setIsShowKeyboard(false)
@@ -33,6 +48,15 @@ export default function LoginScreen({ navigation }) {
 
   const loadScene = () =>{
     navigation.navigate("Registration")
+  }
+
+  if(!isReady){
+    return (
+      <AppLoading 
+        startAsync={loadFonts} 
+        onFinish={() => setIsReady(true)}
+        onError ={console.warn}
+      />)
   }
 
   return (
@@ -119,7 +143,7 @@ const styles = StyleSheet.create({
   h1:{
     marginBottom: 33,
 
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     fontWeight: "500",
     lineHeight: 35,
@@ -155,7 +179,7 @@ const styles = StyleSheet.create({
   },
 
   login_btn__text: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto-Regular',
     fontStyle: "normal",
     fontWeight: "400",
     fontSize: 16,
@@ -166,7 +190,7 @@ const styles = StyleSheet.create({
   },
   
   registration_page_link__text: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     fontWeight: "400",
     lineHeight: 19,
