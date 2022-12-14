@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Text,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,16 +28,49 @@ export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
 
+  const [secureTextEntry, setSecureTextEntry] = useState(true)
+
+  const [dimensions, setDimensions] = useState(Dimensions.get('window').width - 35 * 2)
+
+
+//////////////////////////////////////////////////////////////////////
+
+  const showOrHideSecureTextEnty = () => {
+    if (secureTextEntry == true){
+      setSecureTextEntry(false)
+    } else {
+      setSecureTextEntry(true)
+    }
+  }
+
+///////////////////////////////////////////////////////////////////////
+
   const keyboardHide = () =>{
     setIsShowKeyboard(false)
     Keyboard.dismiss()
     console.log(state)
     setState(initialState)
   }
+///////////////////////////////////////////////////////////////////////////
 
   const loadScene = () =>{
     navigation.navigate("Registration")
   }
+
+////////////////////////////////////////////////////////////////////////////
+
+  const btnWidthHandler = () =>{
+    const width  = Dimensions.get("window").width- 35 *2
+    console.log(width)
+    setDimensions(width)
+  }
+  
+  useEffect(()=>{
+    const dimensionsHandler=Dimensions.addEventListener('change',btnWidthHandler)
+    return ()=>dimensionsHandler.remove()
+},[])
+
+//////////////////////////////////////////////////////////////////////
 
   const [fontsLoaded] = Font.useFonts({
     "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
@@ -65,7 +99,7 @@ export default function LoginScreen({ navigation }) {
           
           <View style={{ ...styles.container, paddingBottom: isShowKeyboard ? 32 : 100 }}>
 
-            <View style={styles.form_container}> 
+            <View style={{width: dimensions}}> 
               
               <KeyboardAvoidingView
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -80,15 +114,25 @@ export default function LoginScreen({ navigation }) {
                   onFocus = {() => setIsShowKeyboard(true)}
                   onChangeText={(value) => setState((prevState) => ({ ...prevState, email: value }))}
                 />
+                <View>
 
-                <TextInput
-                  value={state.password}
-                  placeholder="Password"
-                  style={styles.input}
-                  onFocus = {() => setIsShowKeyboard(true)}
-                  onChangeText={(value) => setState((prevState) => ({ ...prevState, password: value }))}
-                  secureTextEntry={true}
-                />
+                
+                  <TextInput
+                    value={state.password}
+                    placeholder="Password"
+                    style={styles.input}
+                    onFocus = {() => setIsShowKeyboard(true)}
+                    onChangeText={(value) => setState((prevState) => ({ ...prevState, password: value }))}
+                    secureTextEntry={secureTextEntry}
+                  />
+
+                  <TouchableOpacity style={styles.hideShowPasswordBtn} onPress={showOrHideSecureTextEnty}>
+                    {secureTextEntry?
+                      <Text style = {styles.hideShowPasswordBtnText}>Show</Text> :
+                      <Text style = {styles.hideShowPasswordBtn}>Hide</Text>
+                    }
+                  </TouchableOpacity>
+                </View>
 
                 {isShowKeyboard != true && 
                   <TouchableOpacity style = {styles.login_btn} onPress = {keyboardHide}>
@@ -118,6 +162,8 @@ const styles = StyleSheet.create({
   },
 
   container: {
+    alignItems: "center",
+
     width: "100%",
     paddingTop: 32,
     paddingBottom:78,
@@ -129,7 +175,7 @@ const styles = StyleSheet.create({
   },
 
   form_container:{
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
   },
 
   bg_image: {
@@ -163,9 +209,27 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
+  hideShowPasswordBtn: {
+    position: "absolute",
+    top: "25%",
+    right: "7%",
+  },
+
+  hideShowPasswordBtnText: {
+    fontFamily: 'Roboto-Regular',
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+
+    color: "#1B4371",
+  },
+
   //////////////////////////////////////////////
 
   login_btn: {
+    marginHorizontal:20,
+    
     marginTop:43,
     marginBottom: 16,
     paddingTop: 16, 

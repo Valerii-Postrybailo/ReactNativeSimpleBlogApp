@@ -10,7 +10,9 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
-  Image
+  Image,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -26,10 +28,20 @@ export default function RegistrationScreen({navigation}) {
 
   console.log(Platform.OS)
 
-
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
+  const [dimensions, setDimensions] = useState(Dimensions.get('window').width - 35 * 2)
 
+  const [secureTextEntry, setSecureTextEntry] = useState(true)
+
+  const showOrHideSecureTextEnty = () => {
+    if (secureTextEntry == true){
+      setSecureTextEntry(false)
+    } else {
+      setSecureTextEntry(true)
+    }
+  }
+  
   const loadScene = () =>{
     navigation.navigate("Login")
   }
@@ -40,6 +52,21 @@ export default function RegistrationScreen({navigation}) {
     console.log(state)
     setState(initialState)
   }
+
+///////////////////////////////////////////////////////////////////////////////
+  
+  const btnWidthHandler = () =>{
+    const width  = Dimensions.get("window").width- 35 *2
+    console.log(width)
+    setDimensions(width)
+  }
+  
+  useEffect(()=>{
+    const dimensionsHandler=Dimensions.addEventListener('change',btnWidthHandler)
+    return ()=>dimensionsHandler.remove()
+},[])
+
+///////////////////////////////////////////////////////////////////////////////
 
   const [fontsLoaded] = Font.useFonts({
     "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
@@ -60,21 +87,22 @@ export default function RegistrationScreen({navigation}) {
     SplashScreen.hideAsync();
   }
 
+/////////////////////////////////////////////////////////////////////////////////
+
   return (
-    <TouchableWithoutFeedback  onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.main_container}>
         <ImageBackground source={require("../../assets/photo_BG.jpg")} style={styles.bg_image} >
-
           <View style={styles.container}>
 
-            <View style={styles.form_container}>
+            <View style={{width: dimensions}}>
             
               <KeyboardAvoidingView
                   behavior={Platform.OS == "ios" ? "padding" : "height"}
               >
 
                 <View style={styles.avatar}>
-                  <TouchableOpacity style = {{backgroundColor:"red", width:25, borderRadius:50, left: "90%", top: "65%"}}>
+                  <TouchableOpacity style = {StyleSheet.addImage}>
                     <Image source={require('../../assets/add.png')} style={styles.addImage}/>
                   </TouchableOpacity>
                 </View>
@@ -97,15 +125,23 @@ export default function RegistrationScreen({navigation}) {
                   onChangeText = {(value)=> setState((prevState) =>({...prevState, email: value}) )}
                 />
 
-                <TextInput
-                  value={state.password}
-                  placeholder="Password"
-                  style={styles.input}
-                  onFocus = {() => setIsShowKeyboard(true)}
-                  onChangeText={(value) => setState((prevState) => ({ ...prevState, password: value }))}
-                  secureTextEntry={true}
-                />
+                <View>
+                  <TextInput
+                    value={state.password}
+                    placeholder="Password"
+                    style={styles.input}
+                    onFocus={() => setIsShowKeyboard(true)}
+                    onChangeText={(value) => setState((prevState) => ({ ...prevState, password: value }))}
+                    secureTextEntry={secureTextEntry}
+                  />
 
+                  <TouchableOpacity style={styles.hideShowPasswordBtn} onPress={showOrHideSecureTextEnty}>
+                    {secureTextEntry?
+                      <Text style = {styles.hideShowPasswordBtnText}>Show</Text> :
+                      <Text style = {styles.hideShowPasswordBtn}>Hide</Text>
+                    }
+                  </TouchableOpacity>
+                </View>
                 
 
                 <TouchableOpacity style = {styles.registaration_btn} onPress = {keyboardHide}>
@@ -118,7 +154,7 @@ export default function RegistrationScreen({navigation}) {
 
               </KeyboardAvoidingView>
             </View>
-          </View>
+            </View>
         </ImageBackground>
       </View> 
     </TouchableWithoutFeedback>
@@ -128,11 +164,12 @@ export default function RegistrationScreen({navigation}) {
 const styles = StyleSheet.create({
 
   main_container: {
-    flex:1,
+    flex: 1,
   },
 
   container: {
-
+    alignItems: "center",
+    
     width: "100%",
     paddingTop:92,
     paddingBottom: 78,
@@ -141,10 +178,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
 
     backgroundColor: "#FFFFFF",
+
   },
 
-  form_container: {
-    marginHorizontal: 20,
+  form_container: {    
+    // marginHorizontal: 20,
   },
 
   //////////////////////////////////////////////////////////////////
@@ -163,6 +201,22 @@ const styles = StyleSheet.create({
     border: "1#E8E8E8",
   },
 
+  hideShowPasswordBtn: {
+    position: "absolute",
+    top: "25%",
+    right: "7%",
+  },
+
+  hideShowPasswordBtnText: {
+    fontFamily: 'Roboto-Regular',
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+
+    color: "#1B4371",
+  },
+
   avatar:{
     position: "absolute",
     top: "-25%",
@@ -176,10 +230,13 @@ const styles = StyleSheet.create({
   },
 
   addImage: {
-    // position: "relative",
-    // left: 0,
-    // width: 25,
-    // height: 25,
+    width: 25,
+    height:25,
+    borderRadius: 50,
+    left: "90%", 
+    top: "280%",
+
+    backgroundColor: "white",
   },
   
   h1: {    
@@ -197,7 +254,8 @@ const styles = StyleSheet.create({
 
   ////////////////////////////////////////////
 
-  registaration_btn:{
+  registaration_btn: {
+    marginHorizontal:20,
     marginTop:43,
 
     paddingTop: 16, 
@@ -238,6 +296,6 @@ const styles = StyleSheet.create({
   bg_image: {
     flex:1,
     resizeMode:"cover",
-    justifyContent:"flex-end",
+    justifyContent: "flex-end",
   },
 });
