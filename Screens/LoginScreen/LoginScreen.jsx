@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -12,18 +12,8 @@ import {
   ImageBackground,
 } from "react-native";
 
+import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-
-
-import { AppLoading } from 'expo';
-
-const loadFonts = async () => {
-  await Font.loadAsync({
-    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
-  })
-}
 
 const initialState = {
   email: "",
@@ -36,8 +26,6 @@ export default function LoginScreen({ navigation }) {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
-  const [isReady, setIsReady] = useState(false)
-
 
   const keyboardHide = () =>{
     setIsShowKeyboard(false)
@@ -50,13 +38,23 @@ export default function LoginScreen({ navigation }) {
     navigation.navigate("Registration")
   }
 
-  if(!isReady){
-    return (
-      <AppLoading 
-        startAsync={loadFonts} 
-        onFinish={() => setIsReady(true)}
-        onError ={console.warn}
-      />)
+  const [fontsLoaded] = Font.useFonts({
+    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
+  })
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+      prepare();
+  }, [])
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
   }
 
   return (

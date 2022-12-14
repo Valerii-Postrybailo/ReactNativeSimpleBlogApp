@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -10,19 +10,11 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
+  Image
 } from "react-native";
 
+import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-
-import { AppLoading } from 'expo';
-
-const loadFonts = async () => {
-  await Font.loadAsync({
-    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
-  })
-}
 
 const initialState = {
   login: "",
@@ -34,9 +26,9 @@ export default function RegistrationScreen({navigation}) {
 
   console.log(Platform.OS)
 
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
-  const [isReady, setIsReady] = useState(false)
 
   const loadScene = () =>{
     navigation.navigate("Login")
@@ -49,13 +41,23 @@ export default function RegistrationScreen({navigation}) {
     setState(initialState)
   }
 
-  if(!isReady){
-    return (
-    <AppLoading 
-      startAsync={loadFonts} 
-      onFinish={() => setIsReady(true)}
-      onError ={console.warn}
-      />)
+  const [fontsLoaded] = Font.useFonts({
+    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
+  })
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+      prepare();
+  }, [])
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
   }
 
   return (
@@ -72,6 +74,9 @@ export default function RegistrationScreen({navigation}) {
               >
 
                 <View style={styles.avatar}>
+                  <TouchableOpacity style = {{backgroundColor:"red", width:25, borderRadius:50, left: "90%", top: "65%"}}>
+                    <Image source={require('../../assets/add.png')} style={styles.addImage}/>
+                  </TouchableOpacity>
                 </View>
                 
                 <Text component="h1" style={styles.h1}>Registration</Text>
@@ -160,8 +165,9 @@ const styles = StyleSheet.create({
 
   avatar:{
     position: "absolute",
-    top: -150,
-    left: "32%",
+    top: "-25%",
+    left: "50%",
+    transform: ([{translateX:-57},{translateY:-55}]),
     
     width: 120,
     height: 120,
@@ -169,6 +175,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
 
+  addImage: {
+    // position: "relative",
+    // left: 0,
+    // width: 25,
+    // height: 25,
+  },
+  
   h1: {    
     marginBottom: 33,
 
