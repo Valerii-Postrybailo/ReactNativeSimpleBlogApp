@@ -68,31 +68,31 @@ export default function RegistrationScreen({navigation}) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  const [fontsLoaded] = Font.useFonts({
-    "Roboto-Regular":require("../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium":require("../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold":require("../../assets/fonts/Roboto-Bold.ttf")
-  })
+  // const [fontsLoaded] = Font.useFonts({
+  //   "Roboto-Regular":require("../../../assets/fonts/Roboto-Regular.ttf"),
+  //   "Roboto-Medium":require("../../../assets/fonts/Roboto-Medium.ttf"),
+  //   "Roboto-Bold":require("../../../assets/fonts/Roboto-Bold.ttf")
+  // })
 
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-      prepare();
-  }, [])
+  // useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
+  //     prepare();
+  // }, [])
 
-  if (!fontsLoaded) {
-    return undefined;
-  } else {
-    SplashScreen.hideAsync();
-  }
+  // if (!fontsLoaded) {
+  //   return undefined;
+  // } else {
+  //   SplashScreen.hideAsync();
+  // }
 
 /////////////////////////////////////////////////////////////////////////////////
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.main_container}>
-        <ImageBackground source={require("../../assets/photo_BG.jpg")} style={styles.bg_image} >
+        <ImageBackground source={require("../../../assets/photo_BG.jpg")} style={styles.bg_image} >
           <View style={styles.container}>
 
             <View style={{width: dimensions}}>
@@ -103,7 +103,7 @@ export default function RegistrationScreen({navigation}) {
 
                 <View style={styles.avatar}>
                   <TouchableOpacity style = {StyleSheet.addImage}>
-                    <Image source={require('../../assets/add.png')} style={styles.addImage}/>
+                    <Image source={require('../../../assets/add.png')} style={styles.addImage}/>
                   </TouchableOpacity>
                 </View>
                 

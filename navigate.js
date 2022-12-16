@@ -1,6 +1,6 @@
 import React from 'react'
-import LoginScreen from './Screens/LoginScreen/LoginScreen'
-import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen"
+import LoginScreen from './Screens/auth/LoginScreen/LoginScreen'
+import RegistrationScreen from "./Screens/auth/RegistrationScreen/RegistrationScreen"
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
@@ -8,21 +8,22 @@ import { NavigationContainer } from '@react-navigation/native'
 const Stack = createStackNavigator();
 
 export default function Navigate() {
-  return <NavigationContainer>
+  return (
+  <NavigationContainer>
     <Stack.Navigator>
 
       <Stack.Screen
           name = "Registration"
           component = {RegistrationScreen}
-          options = {{title: "Registration page"}}
+          options={{ headerShown: false}}
         />
 
         <Stack.Screen
           name = "Login"
           component = {LoginScreen}
-          options = {{title: "Login page"}}
+          options = {{headerShown: false }}
         />
 
     </Stack.Navigator>
-  </NavigationContainer>;
+  </NavigationContainer>)
 }
