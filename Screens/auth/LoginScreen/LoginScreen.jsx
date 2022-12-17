@@ -50,6 +50,10 @@ export default function LoginScreen({ navigation }) {
     Keyboard.dismiss()
     console.log(state)
     setState(initialState)
+
+    if (state) {
+      
+    }
   }
 ///////////////////////////////////////////////////////////////////////////
 
