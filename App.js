@@ -8,7 +8,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
 
+
 export default function App() {
+
   const [fontsLoaded] = Font.useFonts({
     "Roboto-Regular":require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium":require("./assets/fonts/Roboto-Medium.ttf"),
@@ -28,7 +30,7 @@ export default function App() {
     SplashScreen.hideAsync();
   }
   return (
-      <RegistrationScreenStack/>
+    <RegistrationScreenStack />
   );
 }
 

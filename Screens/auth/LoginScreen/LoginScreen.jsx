@@ -13,6 +13,8 @@ import {
   Dimensions,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useAuth} from '../../useAuth'
 // import * as SplashScreen from 'expo-splash-screen';
 // import * as Font from 'expo-font';
 
@@ -23,7 +25,8 @@ const initialState = {
 
 export default function LoginScreen({ navigation }) {
 
-  console.log(Platform.OS)
+  // console.log(Platform.OS)
+
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
@@ -32,7 +35,9 @@ export default function LoginScreen({ navigation }) {
 
   const [dimensions, setDimensions] = useState(Dimensions.get('window').width - 35 * 2)
 
+  const { isAuth, setIsAuth } = useAuth()
 
+  // console.log(isAuth)
 //////////////////////////////////////////////////////////////////////
 
   const showOrHideSecureTextEnty = () => {
@@ -45,14 +50,28 @@ export default function LoginScreen({ navigation }) {
 
 ///////////////////////////////////////////////////////////////////////
 
-  const keyboardHide = () =>{
+  const keyboardHide = async() => {
     setIsShowKeyboard(false)
     Keyboard.dismiss()
-    console.log(state)
-    setState(initialState)
+    // console.log(state)
+    // console.log(state.email)
+    // setState(initialState)
+    
+    if (state.email && state.password) {
+      if (state.email != "test@gmail.com") {
+        return console.log("Email error")
+      }
 
-    if (state) {
-      
+      if (state.password != "12345") {
+        return console.log("Password error")
+      }
+
+      console.log("good"),
+      await AsyncStorage.setItem("token", "1234")
+      setIsAuth(true)
+      console.log(true)
+    } else {
+      console.log("No user in the system")
     }
   }
 ///////////////////////////////////////////////////////////////////////////

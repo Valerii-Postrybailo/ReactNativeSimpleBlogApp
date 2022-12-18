@@ -103,7 +103,7 @@ export default function RegistrationScreen({navigation}) {
 
                 <View style={styles.avatar}>
                   <TouchableOpacity style = {StyleSheet.addImage}>
-                    <Image source={require('../../../assets/add.png')} style={styles.addImage}/>
+                    <Image source={require('../../../assets/avatar_add_icon.png')} style={styles.addImage}/>
                   </TouchableOpacity>
                 </View>
                 
