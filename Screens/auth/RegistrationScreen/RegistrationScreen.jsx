@@ -12,11 +12,10 @@ import {
   ImageBackground,
   Image,
   Dimensions,
-  ScrollView,
 } from "react-native";
 
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useAuth} from '../../useAuth'
 
 const initialState = {
   login: "",
@@ -34,6 +33,9 @@ export default function RegistrationScreen({navigation}) {
 
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
+  const { isAuth, setIsAuth } = useAuth()
+
+
   const showOrHideSecureTextEnty = () => {
     if (secureTextEntry == true){
       setSecureTextEntry(false)
@@ -46,11 +48,19 @@ export default function RegistrationScreen({navigation}) {
     navigation.navigate("Login")
   }
 
-  const keyboardHide = () =>{
+  const keyboardHide = async() =>{
     setIsShowKeyboard(false)
     Keyboard.dismiss()
     console.log(state)
     setState(initialState)
+
+    if (state.email && state.password && state.login) {
+      console.log("good"),
+      await AsyncStorage.setItem("token", "1234")
+      setIsAuth(true)
+    } else {
+      console.log("Bad or empty value!")
+    }
   }
 
 ///////////////////////////////////////////////////////////////////////////////

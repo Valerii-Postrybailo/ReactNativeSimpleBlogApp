@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
 
-import { StyleSheet } from 'react-native';
-
 import RegistrationScreenStack from "./navigate"
 
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-
-
 
 export default function App() {
 
@@ -33,19 +29,3 @@ export default function App() {
     <RegistrationScreenStack />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    minWidth: 375,
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  image:{
-    flex:1,
-    resizeMode:"center",
-    justifyContent:"center",
-  }
-});

@@ -57,21 +57,21 @@ export default function LoginScreen({ navigation }) {
     // console.log(state.email)
     // setState(initialState)
     
-    if (state.email && state.password) {
-      if (state.email != "test@gmail.com") {
-        return console.log("Email error")
-      }
-
-      if (state.password != "12345") {
-        return console.log("Password error")
-      }
-
+    if (state.email && state.password && state) {
+    
       console.log("good"),
       await AsyncStorage.setItem("token", "1234")
       setIsAuth(true)
       console.log(true)
     } else {
-      console.log("No user in the system")
+
+      if (state.email == "" ) {
+        return console.log("Email error")
+      }
+
+      if (state.password == "" ) {
+        return console.log("Password error")
+      }
     }
   }
 ///////////////////////////////////////////////////////////////////////////
