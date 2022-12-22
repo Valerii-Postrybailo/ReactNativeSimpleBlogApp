@@ -24,6 +24,7 @@ const CreatePostsScreen = ({navigation}) => {
 
   const [title, setTitle] = useState("")
   const [location, setLocation] = useState("")
+  const [locationCoords, setLocationCoords] = useState("")
 
   const [type, setType] = useState(CameraType.back);
   const [camera, setCamera] = useState(null)
@@ -43,6 +44,7 @@ const CreatePostsScreen = ({navigation}) => {
     const location = await Location.getCurrentPositionAsync()
     console.log("location", location.coords)
     console.log("uri", photo.uri)
+    setLocationCoords(location.coords)
     setPhoto(photo.uri)
   }
 
@@ -56,10 +58,12 @@ const CreatePostsScreen = ({navigation}) => {
   })
   
   const sendPhoto = () => {
-
-    navigation.navigate("DefaultScreen", { photo, title,location })
-    
+    navigation.navigate("DefaultScreen", { photo, title,location, locationCoords})
   }
+  
+  // const goBack = () => {
+  //   navigation.navigate("DefaultScreen")
+  // }
   
   
   return ( 
@@ -69,8 +73,7 @@ const CreatePostsScreen = ({navigation}) => {
     
       <View style={{ ...styles.make_post_container, paddingBottom: isShowKeyboard ? 32 : 100 }}>
         
-      
-          
+
         <Camera style={styles.camera} ref={setCamera} >
           {photo && (
             <View style={styles.takePhotoContainer}>

@@ -33,7 +33,7 @@ export const AuthContext = React.createContext({
 
 
 
-export default function Navigate({navigate}) {
+export default function Navigate() {
 
   const [isAuth, setIsAuth] = useState(false)
 
@@ -42,6 +42,10 @@ export default function Navigate({navigate}) {
     setIsAuth(false)
     console.log("btn worked")
   }
+
+  // const goBack = () => {
+  //   navigate("DefaultScreen")
+  // }
 
   // const goBack = () => {
   //   navigate("AddPublication")
@@ -73,9 +77,10 @@ export default function Navigate({navigate}) {
           
           <Tab.Navigator screenOptions={{ tabBarShowLabel: false}}>
             <Tab.Screen
-              name="DefaultScreen"
-              component={DefaultPostsScreen}
+              name="PostsScreen"
+              component={PostsScreen}
               options={{
+                headerShown: false,
                 title: "Publications",
                 headerTitleAlign: 'center',
                 tabBarIcon: ({focused, size, color}) => <AntDesign name="appstore-o" size={size} color= {color} /> ,

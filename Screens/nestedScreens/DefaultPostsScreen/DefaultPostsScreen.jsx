@@ -11,7 +11,8 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
-const   DefaultPostsScreen = ({ navigation,route }) => {
+const DefaultPostsScreen = ({ navigation, route }) => {
+  console.log("DefaultScreen route:", route)
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -21,6 +22,15 @@ const   DefaultPostsScreen = ({ navigation,route }) => {
   }, [route.params])
   console.log("params", route.params)
   console.log("posts", posts)
+
+  const openComents = () => {
+    navigation.navigate("Comments", { route})
+  }
+
+  const openMap = () => {
+    const coordinate = route.params.locationCoords
+    navigation.navigate("Map", { coordinate})
+  }
 
   return (
     <View style={styles.container}>
@@ -33,11 +43,11 @@ const   DefaultPostsScreen = ({ navigation,route }) => {
             <Text>{route.params.title}</Text>
 
             <View>
-              <TouchableOpacity onPress={()=> navigation.navigate("Map")}>
+              <TouchableOpacity onPress={openComents}>
                 <FontAwesome name="comment-o" size={24} color="black" />
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={openMap}>
                 <Text>
                   <AntDesign name="enviromento" size={24} color="black" />
                   {route.params.location}

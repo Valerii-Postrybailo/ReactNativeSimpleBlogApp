@@ -7,7 +7,8 @@ import {
 
 import MapView, {Marker} from 'react-native-maps';
 
-const MapScreen = () => {
+const MapScreen = ({ route }) => {
+  console.log("map route:", route.params.coordinate)
   return (
     <View style = {styles.container}>
       <MapView
@@ -15,18 +16,18 @@ const MapScreen = () => {
         initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.006,
         }}
-      />
+      >
 
       <Marker
-        coordinate={{ latitude: 50.516339, longitude: 30.602185 }}
+        coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
         title="travel photo"
       />
-      
+        
+      </MapView>
     </View>)
-      
 }
 
 const styles = StyleSheet.create({
