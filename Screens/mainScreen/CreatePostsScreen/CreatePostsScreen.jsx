@@ -41,10 +41,10 @@ const CreatePostsScreen = ({navigation}) => {
   const takePhoto = async () => {
     await Camera.requestCameraPermissionsAsync()
     const photo = await camera.takePictureAsync()
-    const location = await Location.getCurrentPositionAsync()
+    // const location = await Location.getCurrentPositionAsync()
     console.log("location", location.coords)
     console.log("uri", photo.uri)
-    setLocationCoords(location.coords)
+    // setLocationCoords(location.coords)
     setPhoto(photo.uri)
   }
 
@@ -53,9 +53,13 @@ const CreatePostsScreen = ({navigation}) => {
       let { status } = await Location.requestBackgroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
+        return
       }
+    const location = await Location.getCurrentPositionAsync({})
+    setLocationCoords(location.coords)
+
     })()
-  })
+  },[])
   
   const sendPhoto = () => {
     navigation.navigate("DefaultScreen", { photo, title,location, locationCoords})
