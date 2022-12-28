@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-// import { NavigationContainer } from "@react-navigation/native";
-
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -11,7 +9,6 @@ import { LogBox } from 'react-native';
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store"
-// import { useRoute } from "@react-navigation/native";
 
 import Main from './components/Main/Main';
 

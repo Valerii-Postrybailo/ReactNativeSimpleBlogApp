@@ -15,7 +15,6 @@ import {
   Dimensions,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authSignUpUser, authAvatarChangeUser  } from '../../../redux/auth/authOperations'
 import db from '../../../firebase/config';
 
@@ -49,21 +48,6 @@ const initialFormData = {
     };
   }, []);
 
-  const pickAvatar = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0,
-    });
-
-    if (!result.cancelled) {
-      setAvatar(result.uri);
-    }
-  };
-
-  const deleteAvatar = async () => {
-    setAvatar(null);
-  };
 
   const uploadAvatarToServer = async photo => {
     const response = await fetch(photo);
@@ -87,73 +71,8 @@ const initialFormData = {
     }
   };
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-  };
-
   const toggleSecureEntry = () => setIsSecureEntry(!isSecureEntry);
 
-  // const showOrHideSecureTextEnty = () => {
-  //   if (secureTextEntry == true){
-  //     setSecureTextEntry(false)
-  //   } else {
-  //     setSecureTextEntry(true)
-  //   }
-  // }
-  
-  // const loadScene = () =>{
-  //   navigation.navigate("Login")
-  // }
-
-  // const keyboardHide = async() =>{
-  //   setIsShowKeyboard(false)
-  //   Keyboard.dismiss()
-  //   console.log(state)
-  //   setState(initialState)
-
-  //   if (state.email && state.password && state.login) {
-  //     console.log("good"),
-  //     await AsyncStorage.setItem("token", "1234")
-  //     setIsAuth(true)
-  //   } else {
-  //     console.log("Bad or empty value!")
-  //   }
-  // }
-
-///////////////////////////////////////////////////////////////////////////////
-  
-//   const btnWidthHandler = () =>{
-//     const width  = Dimensions.get("window").width- 35 *2
-//     console.log(width)
-//     setDimensions(width)
-//   }
-  
-//   useEffect(()=>{
-//     const dimensionsHandler=Dimensions.addEventListener('change',btnWidthHandler)
-//     return ()=>dimensionsHandler.remove()
-// },[])
-
-///////////////////////////////////////////////////////////////////////////////
-
-  // const [fontsLoaded] = Font.useFonts({
-  //   "Roboto-Regular":require("../../../assets/fonts/Roboto-Regular.ttf"),
-  //   "Roboto-Medium":require("../../../assets/fonts/Roboto-Medium.ttf"),
-  //   "Roboto-Bold":require("../../../assets/fonts/Roboto-Bold.ttf")
-  // })
-
-  // useEffect(() => {
-  //   async function prepare() {
-  //     await SplashScreen.preventAutoHideAsync();
-  //   }
-  //     prepare();
-  // }, [])
-
-  // if (!fontsLoaded) {
-  //   return undefined;
-  // } else {
-  //   SplashScreen.hideAsync();
-  // }
 
 /////////////////////////////////////////////////////////////////////////////////
 

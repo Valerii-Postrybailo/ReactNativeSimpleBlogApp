@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native"
@@ -18,7 +17,6 @@ import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 
 import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 
 import db from '../../../firebase/config';
 
@@ -74,17 +72,11 @@ const CreatePostsScreen = ({navigation}) => {
     setPostData(prevState => ({ ...prevState, [type]: value }));
   };
 
-  const toggleCameraType = () => {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  };
-
   const takePhoto = async () => {
     try {
       await Camera.requestCameraPermissionsAsync()
       const location = await Location.getCurrentPositionAsync()
       const photo = await camera.takePictureAsync();
-      // await MediaLibrary.createAssetAsync(photo.uri);
-      console.log(photo)
       setPhoto(photo.uri)
 
       // setLocationCoords(location)
@@ -92,14 +84,6 @@ const CreatePostsScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const retakePhoto = () => {
-    setPostData(prevState => ({ ...prevState, photo: '' }));
-  };
-
-  const removeAll = () => {
-    setPostData(initialPostData);
   };
 
   const uploadPhotoToServer = async () => {
@@ -136,41 +120,6 @@ const CreatePostsScreen = ({navigation}) => {
     Keyboard.dismiss();
   };
 
-  // function toggleCameraType() {
-  //   setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  //   takePhoto()
-  // }
-
-  // const takePhoto = async () => {
-  //   await Camera.requestCameraPermissionsAsync()
-  //   const photo = await camera.takePictureAsync()
-  //   // const location = await Location.getCurrentPositionAsync()
-  //   console.log("location", location.coords)
-  //   console.log("uri", photo.uri)
-  //   // setLocationCoords(location.coords)
-  //   setPhoto(photo.uri)
-  // }
-  
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestBackgroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //       return
-  //     }
-  //   const location = await Location.getCurrentPositionAsync({})
-  //   setLocationCoords(location.coords)
-
-  //   })()
-  // },[])
-  
-  // const sendPhoto = () => {
-  //   navigation.navigate("DefaultScreen", { photo, title,location, locationCoords})
-  // }
-  
-  // const goBack = () => {
-  //   navigation.navigate("DefaultScreen")
-  // }
   
   return ( 
     <TouchableWithoutFeedback onPress={keyboardHide}>

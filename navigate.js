@@ -23,31 +23,13 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// export const AuthContext = React.createContext({
-//   isAuth: false,
-//   // setIsAuth: auth => { },
-//   }
-// )
-
-
-
 const useRoute = (isAuth) => {
 
-  // const [isAuth, setIsAuth] = useState(false)
-
   const logOut = () =>{
-    // navigation.navigate("AddPublication")
     isAuth(false)
     console.log("btn worked")
   }
 
-  // const goBack = () => {
-  //   navigate("DefaultScreen")
-  // }
-
-  // const goBack = () => {
-  //   navigate("AddPublication")
-  // }
 
   if (!isAuth) {
     return (
@@ -109,7 +91,7 @@ const useRoute = (isAuth) => {
               tabBarIcon: ({ focused, size, color }) => <Fontisto name="plus-a" size={size} color={color} />,
               headerLeft: () => (
                 <TouchableOpacity 
-                  // onPress={goBack}
+
                   title="Go back"
                 >
                   <AntDesign name="arrowleft" size={28} color="grey" style= {{marginLeft:20, marginTop:5}}/>

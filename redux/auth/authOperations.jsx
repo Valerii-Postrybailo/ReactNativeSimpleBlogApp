@@ -1,6 +1,5 @@
 import authSlice from './authReducer';
 import db from '../../firebase/config';
-// import db from 'firebase/compat/app';
 
 const { updateUserProfile, authStateChange, updateUserAvatar, logoutUser } = authSlice.actions;
 
