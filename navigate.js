@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   TouchableOpacity,
 } from "react-native";
@@ -9,8 +9,7 @@ import CreatePostsScreen from './Screens/mainScreen/CreatePostsScreen/CreatePost
 import ProfileScreen from './Screens/mainScreen/ProfileScreen/ProfileScreen';
 import PostsScreen from "./Screens/mainScreen/PostsScreen/PostsScreen"
 
-import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -18,28 +17,27 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import DefaultPostsScreen from './Screens/nestedScreens/DefaultPostsScreen/DefaultPostsScreen';
 
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-
-const Stack = createStackNavigator();
+const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export const AuthContext = React.createContext({
-  isAuth: false,
-  // setIsAuth: auth => { },
-  }
-)
+// export const AuthContext = React.createContext({
+//   isAuth: false,
+//   // setIsAuth: auth => { },
+//   }
+// )
 
 
 
-export default function Navigate() {
+const useRoute = (isAuth) => {
 
-  const [isAuth, setIsAuth] = useState(false)
+  // const [isAuth, setIsAuth] = useState(false)
 
   const logOut = () =>{
     // navigation.navigate("AddPublication")
-    setIsAuth(false)
+    isAuth(false)
     console.log("btn worked")
   }
 
@@ -51,80 +49,90 @@ export default function Navigate() {
   //   navigate("AddPublication")
   // }
 
-  return (
-  <NavigationContainer>
-      <AuthContext.Provider value={{ isAuth, setIsAuth }}>
-    
-        {!isAuth ?
-    
-          <Stack.Navigator>
+  if (!isAuth) {
+    return (
+      <AuthStack.Navigator>
 
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
+        <AuthStack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+            ...TransitionPresets.ModalPresentationIOS,
+          }}
+        />
 
-            <Stack.Screen
-              name="Registration"
-              component={RegistrationScreen}
-              options={{ headerShown: false }}
-            />
+        <AuthStack.Screen
+          name="Registration"
+          component={RegistrationScreen}
+          options={{
+            headerShown: false,
+            ...TransitionPresets.ModalPresentationIOS,
+          }}
+        />
 
-          </Stack.Navigator>
-      
-          :
-          
-          <Tab.Navigator screenOptions={{ tabBarShowLabel: false}}>
-            <Tab.Screen
-              name="PostsScreen"
-              component={PostsScreen}
-              options={{
-                headerShown: false,
-                title: "Publications",
-                headerTitleAlign: 'center',
-                tabBarIcon: ({focused, size, color}) => <AntDesign name="appstore-o" size={size} color= {color} /> ,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={logOut}
-                    title="Log out"
-                  >
-                    <MaterialIcons name="logout" size={28} color="grey" style= {{marginRight:20,marginTop:5}} />
-                  </TouchableOpacity>
-                )
-              }}
-            />
+      </AuthStack.Navigator>
+    )
+  }
 
-            <Tab.Screen name="AddPublication" component={CreatePostsScreen}
-              options={{
-                headerTitleAlign: 'center',
-                tabBarIcon: ({ focused, size, color }) => <Fontisto name="plus-a" size={size} color={color} />,
-                headerLeft: () => (
-                  <TouchableOpacity 
-                    // onPress={goBack}
-                    title="Go back"
-                  >
-                    <AntDesign name="arrowleft" size={28} color="grey" style= {{marginLeft:20, marginTop:5}}/>
-                  </TouchableOpacity>
-                )
-              }} 
-            />
+    return(
+      <Tab.Navigator screenOptions={{ tabBarShowLabel: false}}>
+        <Tab.Screen
+          name="PostsScreen"
+          component={PostsScreen}
+          options={({ route }) => ({
+          tabBarStyle: (route => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+            if (routeName === 'Comments' || routeName === 'Map') {
+              return { display: 'none' };
+            }
+            return { height: 80, paddingTop: 9 };
+          })(route),
+            headerShown: false,
+            title: "Publications",
+            headerTitleAlign: 'center',
+            tabBarIcon: ({focused, size, color}) => <AntDesign name="appstore-o" size={size} color= {color} /> ,
+            headerRight: () => (
+              <TouchableOpacity
+                  onPress={logOut}
+                  title="Log out"
+                >
+                  <MaterialIcons name="logout" size={28} color="grey" style= {{marginRight:20,marginTop:5}} />
+              </TouchableOpacity>
+              ),
+            })}
+          />
 
-            <Tab.Screen name="UserProfile" component={ProfileScreen}
-              options={{ tabBarIcon: ({ focused, size = 28, color }) => <Feather name="user" size={size} color={color}/>}} 
-            />
+        <Tab.Screen name="AddPublication" component={CreatePostsScreen}
+          options={{
+            headerTitleAlign: 'center',
+              tabBarIcon: ({ focused, size, color }) => <Fontisto name="plus-a" size={size} color={color} />,
+              headerLeft: () => (
+                <TouchableOpacity 
+                  // onPress={goBack}
+                  title="Go back"
+                >
+                  <AntDesign name="arrowleft" size={28} color="grey" style= {{marginLeft:20, marginTop:5}}/>
+                </TouchableOpacity>
+              )
+            }} 
+          />
 
-          </Tab.Navigator>}
-        
-          {/* <Stack.Navigator>
-            <Stack.Screen
-            name="Comments"
-            component={CommentsScreen}
-            options={{ headerShown: true }}
-            />
-          </Stack.Navigator> */}
+          <Tab.Screen name="UserProfile" component={ProfileScreen}
+            options={({ route }) => ({
+            tabBarStyle: (route => {
+              const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+              if (routeName === 'Comments' || routeName === 'Map') {
+                return { display: 'none' };
+              }
+              return { height: 80, paddingTop: 9 };
+              })(route),
+              tabBarIcon: ({focused, size = 28, color}) => <Feather name="user" size={size} color={color} />
+          })} 
+        />
 
-      </AuthContext.Provider>
-  </NavigationContainer>)
-}
+      </Tab.Navigator>
+    )
+  }
 
+  export default useRoute;

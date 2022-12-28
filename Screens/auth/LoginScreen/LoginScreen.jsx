@@ -1,4 +1,5 @@
-import React, { useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from 'react-redux';
 import {
   StyleSheet,
   View,
@@ -13,85 +14,108 @@ import {
   Dimensions,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useAuth} from '../../useAuth'
-// import * as SplashScreen from 'expo-splash-screen';
-// import * as Font from 'expo-font';
+import { authLogInUser } from '../../../redux/auth/authOperations'
 
-const initialState = {
+const initialFormData = {
   email: "",
   password: "",
 }
 
-export default function LoginScreen({ navigation }) {
+  const LoginScreen = ({ navigation }) => {
 
   // console.log(Platform.OS)
-
+  const [formData, setFormData] = useState(initialFormData);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState)
 
-  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const [dimensions, setDimensions] = useState(Dimensions.get('window').width - 35 * 2)
 
-  const { isAuth, setIsAuth } = useAuth()
 
-  // console.log(isAuth)
+//////////////////////////////////////////////////////////////////////
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get('window').width - 20 * 2;
+      setDimensions(width);
+    };
+    const dimensionsSubscription = Dimensions.addEventListener('change', onChange);
+
+    return () => {
+      dimensionsSubscription?.remove();
+    };
+  }, []);
 //////////////////////////////////////////////////////////////////////
 
-  const showOrHideSecureTextEnty = () => {
-    if (secureTextEntry == true){
-      setSecureTextEntry(false)
-    } else {
-      setSecureTextEntry(true)
-    }
-  }
+  const handleSubmit = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    dispatch(authLogInUser(formData));
+    setFormData(initialFormData);
+  };
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
+  const toggleSecureEntry = () => setIsSecureEntry(!isSecureEntry);
+
+  // const showOrHideSecureTextEnty = () => {
+  //   if (secureTextEntry == true){
+  //     setSecureTextEntry(false)
+  //   } else {
+  //     setSecureTextEntry(true)
+  //   }
+  // }
 
 ///////////////////////////////////////////////////////////////////////
 
-  const keyboardHide = async() => {
-    setIsShowKeyboard(false)
-    Keyboard.dismiss()
+  // const keyboardHide = async() => {
+  //   setIsShowKeyboard(false)
+  //   Keyboard.dismiss()
     // console.log(state)
     // console.log(state.email)
     // setState(initialState)
     
-    if (state.email && state.password && state) {
+  //   if (state.email && state.password && state) {
     
-      console.log("good"),
-      await AsyncStorage.setItem("token", "1234")
-      setIsAuth(true)
-      console.log(true)
-    } else {
+  //     console.log("good"),
+  //     await AsyncStorage.setItem("token", "1234")
+  //     setIsAuth(true)
+  //     console.log(true)
+  //   } else {
 
-      if (state.email == "" ) {
-        return console.log("Email error")
-      }
+  //     if (state.email == "" ) {
+  //       return console.log("Email error")
+  //     }
 
-      if (state.password == "" ) {
-        return console.log("Password error")
-      }
-    }
-  }
+  //     if (state.password == "" ) {
+  //       return console.log("Password error")
+  //     }
+  //   }
+  // }
 ///////////////////////////////////////////////////////////////////////////
 
-  const loadScene = () =>{
-    navigation.navigate("Registration")
-  }
+  // const loadScene = () =>{
+  //   navigation.navigate("Registration")
+  // }
 
 ////////////////////////////////////////////////////////////////////////////
 
-  const btnWidthHandler = () =>{
-    const width  = Dimensions.get("window").width- 35 *2
-    console.log(width)
-    setDimensions(width)
-  }
+//   const btnWidthHandler = () =>{
+//     const width  = Dimensions.get("window").width- 35 *2
+//     console.log(width)
+//     setDimensions(width)
+//   }
   
-  useEffect(()=>{
-    const dimensionsHandler=Dimensions.addEventListener('change',btnWidthHandler)
-    return ()=>dimensionsHandler.remove()
-},[])
+//   useEffect(()=>{
+//     const dimensionsHandler=Dimensions.addEventListener('change',btnWidthHandler)
+//     return ()=>dimensionsHandler.remove()
+// },[])
 
 //////////////////////////////////////////////////////////////////////
 
@@ -116,7 +140,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
 
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
+    <TouchableWithoutFeedback onPress={keyboardHide}> 
       <View style={styles.wrapper}>
         <ImageBackground style={styles.bg_image} source={require("../../../assets/photo_BG.jpg")}  > 
           
@@ -131,26 +155,26 @@ export default function LoginScreen({ navigation }) {
                 <Text component="h1" style={styles.h1}>Login</Text>
 
                 <TextInput
-                  value={state.email}
+                  value={formData.email}
                   placeholder="Email"
                   style={styles.input}
                   onFocus = {() => setIsShowKeyboard(true)}
-                  onChangeText={(value) => setState((prevState) => ({ ...prevState, email: value }))}
+                  onChangeText={(value) => setFormData((prevFormData) => ({ ...prevFormData, email: value }))}
                 />
                 <View>
 
                 
                   <TextInput
-                    value={state.password}
+                    value={formData.password}
                     placeholder="Password"
                     style={styles.input}
                     onFocus = {() => setIsShowKeyboard(true)}
-                    onChangeText={(value) => setState((prevState) => ({ ...prevState, password: value }))}
-                    secureTextEntry={secureTextEntry}
+                    onChangeText={(value) => setFormData((prevFormData) => ({ ...prevFormData, password: value }))}
+                    secureTextEntry={isSecureEntry}
                   />
 
-                  <TouchableOpacity style={styles.hideShowPasswordBtn} onPress={showOrHideSecureTextEnty}>
-                    {secureTextEntry?
+                  <TouchableOpacity style={styles.hideShowPasswordBtn} onPress={toggleSecureEntry}>
+                    {isSecureEntry?
                       <Text style = {styles.hideShowPasswordBtnText}>Show</Text> :
                       <Text style = {styles.hideShowPasswordBtn}>Hide</Text>
                     }
@@ -158,13 +182,13 @@ export default function LoginScreen({ navigation }) {
                 </View>
 
                 {/* {isShowKeyboard != true &&  */}
-                  <TouchableOpacity style = {styles.login_btn} onPress = {keyboardHide}>
+                  <TouchableOpacity style = {styles.login_btn} onPress = {handleSubmit}>
                     <Text style = {styles.login_btn__text} >Login</Text>
                   </TouchableOpacity>
                 {/* // } */}
 
                 {/* {isShowKeyboard != true && */}
-                  <TouchableOpacity onPress={loadScene} style={styles.log_in_page_link}>
+                  <TouchableOpacity onPress={() => navigation.navigate('Registration')} style={styles.log_in_page_link}>
                     <Text style={styles.registration_page_link__text}>Still don't have your personal account? Let's go!</Text>
                   </TouchableOpacity>
                 {/* // }  */}
@@ -177,6 +201,8 @@ export default function LoginScreen({ navigation }) {
     </TouchableWithoutFeedback>
   );
 }
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   wrapper: {
