@@ -247,9 +247,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
   },
   logoutBtn: {
-    position: 'absolute',
+    // position: 'absolute',
     top: 100,
-    right: 16,
+    left: 350,
   },
   profileNameWrapper: {
     marginTop: 92,
